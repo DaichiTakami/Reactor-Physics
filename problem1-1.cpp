@@ -7,7 +7,7 @@ int main(){
 
     double a = 1. ;
     double b = -1. ;
-    double c = -1.9 ;
+    double c = -2.0 ;
 
     double x = -5 ;
     for (int i = 1 ; i <= 1000 ; i++){
