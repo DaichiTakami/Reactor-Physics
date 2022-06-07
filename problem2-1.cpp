@@ -6,9 +6,9 @@ using namespace std ;
 
 int main(){
 
-    vector<float>a(2);
-    vector<float>b(2);
-    vector<float>c(2);
+    vector<double>a(2);
+    vector<double>b(2);
+    vector<double>c(2);
     double d ;
 
     a[0] = 3. ;
