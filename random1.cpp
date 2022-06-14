@@ -16,7 +16,7 @@ int main(){
     // cout<<rand()<<"\n" ;
     // cout<<random()<<"\n" ;
 
-    int iter_max = 1000000 ;
+    int iter_max = 10000000 ;
 
     double a, b, pi ;
 

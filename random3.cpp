@@ -12,7 +12,7 @@ int main(){
 
     srand(time(NULL)) ;
     
-    int dice_count = 5 ;
+    int dice_count = 50 ;
     double range = 1./dice_count ;
     int repeat = 10000 ;
 
@@ -41,10 +41,20 @@ int main(){
         }
                 
     }
-    for (int j = 0; j < N; j++)
+
+    FILE *gnuplot = popen("gnuplot", "w");
+    for (int i = 0; i < N; i++)
     {
-        cout<<" "<<1+j*range<<" : "<<a[j]<<" 回"<<"\n"  ;
+        int x = a[i] ;
+        fprintf(gnuplot,"x \n");
     }
+    pclose(gnuplot);
+    
+
+    // for (int j = 0; j < N; j++)
+    // {
+    //     cout<<" "<<1+j*range<<" : "<<a[j]<<" 回"<<"\n"  ;
+    // }
         
 
     return 0 ;
