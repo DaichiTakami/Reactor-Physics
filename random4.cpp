@@ -1,24 +1,33 @@
 #include<cmath>
 #include<iostream>
+#include<vector>
+#include<stdlib.h>
 
 using namespace std ;
 
-// void(){
+const double PI = acos(-1);
 
+void box(double x, double y){
 
+    double z_1 = sqrt(-2*log(x))*cos(2*PI*y); 
 
     
-// };
+};
 
 int main(){
 
     srand(10);
 
-    double z_1 = (double)rand()/RAND_MAX ;
-    double z_2 = (double)rand()/RAND_MAX ;
+    double x = (double)rand()/RAND_MAX ;
+    double y = (double)rand()/RAND_MAX ;
 
-    cout<<z_1<<"\n";
-    cout<<z_2<<"\n";
+    box(x,y);
+
+    
+
+
+    // cout<<z_1<<"\n";
+    // cout<<z_2<<"\n";
 
 
 
