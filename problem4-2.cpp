@@ -38,6 +38,8 @@ int main(){
     
     cout<<x_2<<"\n" ;
 
+    aaa
+
 
 
     return 0 ;
