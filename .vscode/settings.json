@@ -1,0 +1,18 @@
+{
+    "latex-workshop.latex.recipes":[{
+        "name": "uplatex",
+        "tools" : [
+          "latexmk"
+        ]
+      }],
+      "latex-workshop.latex.tools": [{
+        "name": "latexmk",
+        "command": "latexmk",
+        "args" : [
+
+        ]
+      }
+    ],
+      "latex-workshop.view.pdf.viewer":"tab", // 「Ctrl + Alt + v」で使うPDFビューワをタブに設定
+      "latex-workshop.latex.autoClean.run": "onBuilt" // ビルド時に一時ファイル(.auxなど)を削除
+}
