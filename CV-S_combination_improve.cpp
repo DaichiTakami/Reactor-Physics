@@ -12,7 +12,7 @@
 #define mean 0
 #define deviation 1
 #define test 0
-#define case 7
+#define case 9
 
 using namespace std ;
 
