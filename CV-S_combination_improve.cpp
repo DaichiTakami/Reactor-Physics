@@ -10,8 +10,8 @@
 #define conventional 0
 #define dimensionless 1
 #define mean 0
-#define deviation 1
-#define test 0
+#define deviation 0
+#define test 1
 #define case 9
 
 using namespace std ;
