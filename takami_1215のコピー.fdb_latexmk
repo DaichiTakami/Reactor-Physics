@@ -1,0 +1,15 @@
+# Fdb version 3
+["dvipdf"] 0 "takami_1215のコピー.dvi" "takami_1215のコピー.pdf" "takami_1215のコピー" 0
+  "takami_1215のコピー.dvi" 0 -1 0 "latex"
+  (generated)
+  "takami_1215のコピー.pdf"
+["latex"] 1671771642 "takami_1215のコピー.tex" "takami_1215のコピー.dvi" "takami_1215のコピー" 1671771642
+  "/Applications/TeXLive/Library/texlive/2020/texmf-dist/tex/platex/jsclasses/jsarticle.cls" 1602274849 60810 4554ddf6e0b4ed9f3f486c72558ba459 ""
+  "/Applications/TeXLive/Library/texlive/2020/texmf-dist/web2c/texmf.cnf" 1598393674 39451 15a3ebee027466ecb89701aa91dfebaf ""
+  "/Applications/TeXLive/Library/texlive/2020/texmf.cnf" 1606088053 690 c279098c92feb545d010f9551ecbe29d ""
+  "/Users/Shared/TeXLive/texmf-var/web2c/euptex/uplatex.fmt" 1606088162 2570250 54e1a320984c2ea29527b544706dbf14 ""
+  "takami_1215のコピー.aux" 1671770763 8 a94a2480d3289e625eea47cd1b285758 ""
+  "takami_1215のコピー.tex" 1671770693 25388 246e5c06dfcacdffeefa0a71faf12585 ""
+  (generated)
+  "takami_1215のコピー.log"
+  "takami_1215のコピー.dvi"

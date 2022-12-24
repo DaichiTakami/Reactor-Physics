@@ -7,10 +7,10 @@
 #include<fstream>
 #include<math.h>
 
-#define mean 1
+#define mean 0
 #define deviation 0
 
-#define Pu9 1
+#define Pu9 0
 #define Pu2 0
 
 using namespace std ;
@@ -19,23 +19,73 @@ int main(){
 
     ifstream ifs ;
 
-    const char *inputfile = "Pu9_mean.dat" ;
-    ofstream ofs(inputfile) ;
+    char output[256] ;
+    cout<<"write output file name"<<"\n";
+    cin>>output;
 
-    int fileNum = 10000 ;
-    int sampleNum = 100 ;
-    int cal = fileNum/sampleNum ;
+    const char *outputfile = output ;
+    ofstream ofs(outputfile) ;
+
+    int fileNum = 0 ;
+    int sampleNum ;
+    int cal = 100 ;
+
+    int loopMax = 1000000 ;
 
     char filename[256] ;
     char buf[256] ;
 
-    int targetNum = 21 ;
-    int mockupNum = 2 ;
+    int targetNum = 0 ;
 
-    double target[] = {0,0.1,1.0,2.5,5.0,7.5,10.0,12.5,15.0,17.5,20.0,22.5,25.0,27.5,30.0,32.5,35.0,37.5,40.0,42.5,45.0} ;
+    ifs.open("/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/cal_point");
 
-    double kt[targetNum][sampleNum] ;
-    double km_i[mockupNum][sampleNum] ;
+    while (ifs.getline(buf,sizeof(buf)))
+    {
+        targetNum ++ ;
+    }
+    
+    // ofs<<"line number = "<<linenum<<"\n" ;
+
+    ifs.clear() ;
+    ifs.seekg(0, std::ios::beg) ;
+
+    double *cal_point ;
+    cal_point = new double[targetNum] ;
+
+    for (int jj = 0; jj < targetNum; jj++)
+    {
+        ifs.getline(buf,sizeof(buf)) ;
+        cal_point[jj] = atof(buf) ;
+    }
+
+    ifs.close() ;
+
+    ifs.open("/Users/takamidaichi/Documents/GitHub/Reactor-Physics/sample_ref");
+
+    int linenum = 0 ;
+
+    while (ifs.getline(buf,sizeof(buf)))
+    {
+        linenum ++ ;
+    }
+    
+    // ofs<<"line number = "<<linenum<<"\n" ;
+
+    ifs.clear() ;
+    ifs.seekg(0, std::ios::beg) ;
+
+    double *ref ;
+    ref = new double[linenum] ;
+
+    for (int jj = 0; jj < linenum; jj++)
+    {
+        ifs.getline(buf,sizeof(buf)) ;
+        ref[jj] = atof(buf) ;
+    }
+
+    ifs.close() ;
+
+    int mockupNum = linenum - targetNum ;
 
     vector<double> ktSum(targetNum) ;
     vector<double> kmSum(mockupNum) ;
@@ -86,97 +136,128 @@ int main(){
         }
         
     }
-    
-    
-    ifs.open("/Users/takamidaichi/Documents/GitHub/Reactor-Physics/sample_ref");
 
-    int linenum = 0 ;
-
-    while (ifs.getline(buf,sizeof(buf)))
+    for (int ii = 0; ; ii++)
     {
-        linenum ++ ;
+        
+        sprintf(filename, "/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/sample_%d", ii);
+
+        // ofs<<filename<<"\n" ;
+
+        ifs.open(filename) ;
+        if (ifs.fail())
+        {
+            break ;
+        }
+
+        // double *arr ;
+        // arr = new double[linenum] ;
+
+        // for (int jj = 0; jj < linenum; jj++)
+        // {
+        //     ifs.getline(buf,sizeof(buf)) ;
+        //     arr[jj] = atof(buf) ;
+        // }
+
+        ifs.close() ;
+
+        // for (int jj = 0; jj < linenum; jj++)
+        // {
+        //     arr[jj] /= ref[jj] ;
+        //     arr[jj] -= 1. ;
+        // }
+
+        // for (int jj = 0; jj < targetNum; jj++)
+        // {
+        //     kt[jj][fileNum] = arr[jj] ;
+        // }
+        
+        // for (int jj = 0; jj < mockupNum; jj++)
+        // {
+        //     km_i[jj][fileNum] = arr[jj+targetNum] ;
+        // }
+
+        fileNum ++ ;
+    }
+
+    sampleNum = fileNum/cal ;
+
+    // ofs<<fileNum ;
+
+    double kt[targetNum][fileNum] ;
+    double km_i[mockupNum][fileNum] ;
+
+    for (int ii = 0; ii < fileNum; ii++)
+    {
+        
+        sprintf(filename, "/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/sample_%d", ii);
+
+        // ofs<<filename<<"\n" ;
+
+        ifs.open(filename) ;
+        if (ifs.fail())
+        {
+            break ;
+        }
+
+        double *arr ;
+        arr = new double[linenum] ;
+
+        for (int jj = 0; jj < linenum; jj++)
+        {
+            ifs.getline(buf,sizeof(buf)) ;
+            arr[jj] = atof(buf) ;
+        }
+
+        ifs.close() ;
+
+        for (int jj = 0; jj < linenum; jj++)
+        {
+            arr[jj] /= ref[jj] ;
+            arr[jj] -= 1. ;
+        }
+
+        for (int jj = 0; jj < targetNum; jj++)
+        {
+            kt[jj][ii] = arr[jj] ;
+        }
+        
+        for (int jj = 0; jj < mockupNum; jj++)
+        {
+            km_i[jj][ii] = arr[jj+targetNum] ;
+        }
+
+
     }
     
-    // ofs<<"line number = "<<linenum<<"\n" ;
-
-    ifs.clear() ;
-    ifs.seekg(0, std::ios::beg) ;
-
-    double *ref ;
-    ref = new double[linenum] ;
-
-    for (int jj = 0; jj < linenum; jj++)
-    {
-        ifs.getline(buf,sizeof(buf)) ;
-        ref[jj] = atof(buf) ;
-    }
-
-    ifs.close() ;
 
     for (int i = 0; i < cal; i++)
     {
 
         for (int ii = 0; ii < sampleNum; ii++)
         {
-
-            sprintf(filename, "/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/sample_%d", 100*i+ii);
-
-            // ofs<<filename<<"\n" ;
-
-            ifs.open(filename) ;
-            if (ifs.fail())
-            {
-                ofs<<"can not open file."<<"\n" ;
-                exit(1);
-            }
-
-            double *arr ;
-            arr = new double[linenum] ;
-
-            for (int jj = 0; jj < linenum; jj++)
-            {
-                ifs.getline(buf,sizeof(buf)) ;
-                arr[jj] = atof(buf) ;
-            }
-
-            ifs.close() ;
-
-            for (int jj = 0; jj < linenum; jj++)
-            {
-                arr[jj] /= ref[jj] ;
-                arr[jj] -= 1. ;
-            }
-
-            for (int jj = 0; jj < targetNum; jj++)
-            {
-                kt[jj][ii] = arr[jj] ;
-            }
-            
-            for (int jj = 0; jj < mockupNum; jj++)
-            {
-                km_i[jj][ii] = arr[jj+targetNum] ;
-            }
-            
             // ofs<<km_i[1][ii]<<"\n" ;
+
+            int num = 100*i + ii ;
             
             for (int jj = 0; jj < targetNum; jj++)
             {
-                ktSum[jj] += arr[jj] ;
-                ktSum2[jj] += arr[jj]*arr[jj] ;
-                ktSum4[jj] += pow(arr[jj],4) ;
+                ktSum[jj] += kt[jj][num] ;
+                ktSum2[jj] += pow(kt[jj][num],2) ;
+                ktSum4[jj] += pow(kt[jj][num],4) ;
             }
             
             for (int jj = 0; jj < mockupNum; jj++)
             {
-                kmSum[jj] += arr[jj+targetNum] ;
-                kmSum4[jj] += pow(arr[jj+targetNum],4) ;
+                kmSum[jj] += km_i[jj][num] ;
+                kmSum4[jj] += pow(km_i[jj][num],4) ;
             }
 
             for (int jj = 0; jj < mockupNum; jj++)
             {
                 for (int kk = 0; kk < mockupNum; kk++)
                 {
-                    kmSum2[jj][kk] += arr[jj+targetNum]*arr[kk+targetNum] ;
+                    kmSum2[jj][kk] += km_i[jj][num]*km_i[kk][num] ;
                 }
                 
             }
@@ -187,8 +268,8 @@ int main(){
             {
                 for (int kk = 0; kk < mockupNum; kk++)
                 {
-                    ktkmSum[jj][kk] += arr[jj]*arr[kk+targetNum] ;
-                    ktkmSum2[jj][kk] += pow(arr[jj]*arr[kk+targetNum],2) ;
+                    ktkmSum[jj][kk] += kt[jj][num]*km_i[jj][num] ;
+                    ktkmSum2[jj][kk] += pow(kt[jj][num]*km_i[jj][num],2) ;
                 }   
             }
         }
@@ -354,7 +435,7 @@ int main(){
             double alpha = cov_tm_vi/var_m_vi; 
             double beta = cov_t2m2_vi/var_m2_vi;
 
-            ofs<<corr_tm_vi<<"\n";
+            // ofs<<alpha<<" "<<beta<<"\n";
 
             double sample_H[sampleNum] ;
             double sample_Hbar[sampleNum] ;
@@ -436,11 +517,11 @@ int main(){
         double ur_std = sqrt(var_stdtest)/sqrt(var_stdt); 
 
         #if mean
-        ofs<<target[ii]<<" "<<sum1_mut<<"\n";
+        ofs<<cal_point[ii]<<" "<<sum1_mut<<"\n";
         #endif
 
         #if deviation
-        ofs<<target[ii]<<" "<<ur_std<<"\n";
+        ofs<<cal_point[ii]<<" "<<ur_std<<"\n";
         #endif
     }
     

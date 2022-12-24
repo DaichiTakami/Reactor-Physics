@@ -7,28 +7,58 @@
 #include<fstream>
 #include<math.h>
 
-#include<Windows.h>
-#include<string.h>
-
-
-
 using namespace std ;
-
-
 
 int main(){
 
-    WIN32_FIND_DATA ffd ;
-    HANDLE hNextFile = FindFirstFileW("C:\\Users\\rokoroko10\\OneDrive\\デスクトップ\\プログラミング\\Reactor-Physics\\SAMPLE\\*.*" , &ffd) ;
-    if (hNextFile != INVALID_HANDLE_VALUE) 
+    ifstream ifs ;
+
+    const char *inputfile = "a.dat" ;
+    ofstream ofs(inputfile) ;
+
+    int fileNum = 10000 ;
+
+    char filename[256] ;
+    char buf[256] ;
+
+    for (int ii = 0; ii < fileNum; ii++)
     {
-        do
+        sprintf(filename, "/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/sample_%d", ii);
+
+        // ofs<<filename<<"\n" ;
+
+        ifs.open(filename) ;
+        if (ifs.fail())
         {
-            puts(ffd.cFileName) ;
-        } while (FindNextFile(hNextFile, &ffd));
-        FindClose(hNextFile) ;
+            ofs<<"can not open file."<<"\n" ;
+            exit(1);
+        }
+        
+        int linenum = 0 ;
+
+        while (ifs.getline(buf,sizeof(buf)))
+        {
+            linenum ++ ;
+        }
+        
+        ofs<<"line number = "<<linenum<<"\n" ;
+
+        ifs.clear() ;
+        ifs.seekg(0, std::ios::beg) ;
+
+        double *arr ;
+        arr = new double[linenum] ;
+
+        for (int jj = 0; jj < linenum; jj++)
+        {
+            ifs.getline(buf,sizeof(buf)) ;
+            arr[jj] = atof(buf) ;
+        }
+
+        ifs.close() ;
         
     }
+    
     
 
     return 0 ;
