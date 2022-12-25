@@ -22,15 +22,15 @@ int main(){
     const char *inputfile = "Pu9_mean.dat" ;
     ofstream ofs(inputfile) ;
 
-    int fileNum = 10000 ;
-    int sampleNum = 100 ;
-    int cal = fileNum/sampleNum ;
+    const int fileNum = 10000 ;
+    const int sampleNum = 100 ;
+    const int cal = fileNum/sampleNum ;
 
     char filename[256] ;
     char buf[256] ;
 
-    int targetNum = 21 ;
-    int mockupNum = 2 ;
+    const int targetNum = 21 ;
+    const int mockupNum = 2 ;
 
     double target[] = {0,0.1,1.0,2.5,5.0,7.5,10.0,12.5,15.0,17.5,20.0,22.5,25.0,27.5,30.0,32.5,35.0,37.5,40.0,42.5,45.0} ;
 
