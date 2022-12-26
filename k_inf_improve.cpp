@@ -6,38 +6,57 @@
 #include<stdio.h>
 #include<fstream>
 #include<math.h>
-
-#define mean 0
-#define deviation 0
-
-#define Pu9 0
-#define Pu2 0
+#include<string>
+#include<sstream>
 
 using namespace std ;
 
+int random(int fileNum){
+    return rand()%fileNum ;
+}
+
+vector<string> split(string& input, char delimiter)
+{
+    istringstream stream(input);
+    string field;
+    vector<string> result;
+    while (getline(stream, field, delimiter)) {
+        result.push_back(field);
+    }
+    return result;
+}
+
 int main(){
+
+    srand(10) ;
 
     ifstream ifs ;
 
     char output[256] ;
-    cout<<"write output file name"<<"\n";
+    cout<<"Enter a name for the output file."<<"\n" ;
     cin>>output;
 
     const char *outputfile = output ;
     ofstream ofs(outputfile) ;
 
     int fileNum = 0 ;
+
     int sampleNum ;
+    cout<<"Enter the number of samples."<<"\n" ;
+    cin>>sampleNum ;
+
+    int num[sampleNum] ;
+
     int cal = 100 ;
 
-    int loopMax = 1000000 ;
+    int loopMax = 1000000000 ;
 
     char filename[256] ;
     char buf[256] ;
 
     int targetNum = 0 ;
 
-    ifs.open("/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/cal_point");
+    ifs.open("SAMPLE/cal_point");
 
     while (ifs.getline(buf,sizeof(buf)))
     {
@@ -60,7 +79,7 @@ int main(){
 
     ifs.close() ;
 
-    ifs.open("/Users/takamidaichi/Documents/GitHub/Reactor-Physics/sample_ref");
+    ifs.open("SAMPLE/sample_ref");
 
     int linenum = 0 ;
 
@@ -81,68 +100,37 @@ int main(){
     {
         ifs.getline(buf,sizeof(buf)) ;
         ref[jj] = atof(buf) ;
+
+        // cout<<ref[jj]<<"\n" ;
     }
 
     ifs.close() ;
 
+
     int mockupNum = linenum - targetNum ;
 
-    vector<double> ktSum(targetNum) ;
-    vector<double> kmSum(mockupNum) ;
-
-    vector<double> ktSum2(targetNum) ;
-    double kmSum2[mockupNum][mockupNum] ;
-
-    vector<double> ktSum4(targetNum) ;
-    vector<double> kmSum4(mockupNum) ;
-
-    double ktkmSum[targetNum][mockupNum] ;
-    double ktkmSum2[targetNum][mockupNum] ;
-
-    double mu_t_cas[targetNum][cal] ;
-    double mu_t_est_cas[targetNum][cal] ;
-    double std_t_cas[targetNum][cal] ;
-    double std_t_est_cas[targetNum][cal] ;
-
-    for (int ii = 0; ii < targetNum; ii++)
-    {
-        ktSum[ii] = 0. ;
-        ktSum2[ii] = 0. ;
-        ktSum4[ii] = 0. ;
-    }
     
-    for (int ii = 0; ii < mockupNum; ii++)
-    {
-        kmSum[ii] = 0. ;
-        kmSum4[ii] = 0. ;
-    }
+    double ktSum ;
+    vector<double> km_iSum(mockupNum) ;
 
-    for (int ii = 0; ii < mockupNum; ii++)
-    {
-        for (int jj = 0; jj < mockupNum; jj++)
-        {
-            kmSum2[ii][jj] = 0. ;
-        }
-        
-    }
-    
+    double ktSum2 ;
+    double km_iSum2[mockupNum][mockupNum] ;
 
-    for (int ii = 0; ii < targetNum; ii++)
-    {
-        for (int jj = 0; jj < mockupNum; jj++)
-        {
-            ktkmSum[ii][jj] = 0. ;
-            ktkmSum2[ii][jj] = 0. ;
-        }
-        
-    }
+    double ktSum4 ;
+    vector<double> km_iSum4(mockupNum) ;
+
+    double ktkm_iSum[mockupNum] ;
+    double ktkm_iSum2[mockupNum] ;
+
+    double mu_t_cas[cal] ;
+    double mu_t_est_cas[cal] ;
+    double std_t_cas[cal] ;
+    double std_t_est_cas[cal] ;
 
     for (int ii = 0; ; ii++)
     {
         
-        sprintf(filename, "/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/sample_%d", ii);
-
-        // ofs<<filename<<"\n" ;
+        sprintf(filename, "SAMPLE/sample_%d", ii);
 
         ifs.open(filename) ;
         if (ifs.fail())
@@ -150,39 +138,12 @@ int main(){
             break ;
         }
 
-        // double *arr ;
-        // arr = new double[linenum] ;
-
-        // for (int jj = 0; jj < linenum; jj++)
-        // {
-        //     ifs.getline(buf,sizeof(buf)) ;
-        //     arr[jj] = atof(buf) ;
-        // }
-
         ifs.close() ;
-
-        // for (int jj = 0; jj < linenum; jj++)
-        // {
-        //     arr[jj] /= ref[jj] ;
-        //     arr[jj] -= 1. ;
-        // }
-
-        // for (int jj = 0; jj < targetNum; jj++)
-        // {
-        //     kt[jj][fileNum] = arr[jj] ;
-        // }
-        
-        // for (int jj = 0; jj < mockupNum; jj++)
-        // {
-        //     km_i[jj][fileNum] = arr[jj+targetNum] ;
-        // }
 
         fileNum ++ ;
     }
 
-    sampleNum = fileNum/cal ;
-
-    // ofs<<fileNum ;
+    cout<<"Number of files : "<<fileNum<<"\n" ;
 
     double kt[targetNum][fileNum] ;
     double km_i[mockupNum][fileNum] ;
@@ -190,9 +151,7 @@ int main(){
     for (int ii = 0; ii < fileNum; ii++)
     {
         
-        sprintf(filename, "/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/sample_%d", ii);
-
-        // ofs<<filename<<"\n" ;
+        sprintf(filename, "SAMPLE/sample_%d", ii);
 
         ifs.open(filename) ;
         if (ifs.fail())
@@ -225,129 +184,119 @@ int main(){
         for (int jj = 0; jj < mockupNum; jj++)
         {
             km_i[jj][ii] = arr[jj+targetNum] ;
+            
         }
 
-
+        // cout<<km_i[0][ii]<<" "<<km_i[1][ii]<<"\n" ;
     }
     
-
-    for (int i = 0; i < cal; i++)
+    for (int i = 0; i < targetNum; i++)
     {
-
-        for (int ii = 0; ii < sampleNum; ii++)
+        for (int j = 0; j < cal; j++)
         {
-            // ofs<<km_i[1][ii]<<"\n" ;
+            ktSum = 0. ;
+            ktSum2 = 0. ;
+            ktSum4 = 0. ;
 
-            int num = 100*i + ii ;
-            
-            for (int jj = 0; jj < targetNum; jj++)
+            for (int kk = 0; kk < mockupNum; kk++)
             {
-                ktSum[jj] += kt[jj][num] ;
-                ktSum2[jj] += pow(kt[jj][num],2) ;
-                ktSum4[jj] += pow(kt[jj][num],4) ;
-            }
-            
-            for (int jj = 0; jj < mockupNum; jj++)
-            {
-                kmSum[jj] += km_i[jj][num] ;
-                kmSum4[jj] += pow(km_i[jj][num],4) ;
+                km_iSum[kk] = 0. ;
+                km_iSum4[kk] = 0. ;
+                for (int ii = 0; ii < mockupNum; ii++)
+                {
+                    km_iSum2[kk][ii] = 0. ;
+                }
+                ktkm_iSum[kk] = 0. ;
+                ktkm_iSum2 [kk] = 0. ;
             }
 
-            for (int jj = 0; jj < mockupNum; jj++)
+            for (int ii = 0; ii < sampleNum; ii++)
             {
+                num[ii] = random(fileNum) ;
+                
+                
+                ktSum += kt[i][num[ii]] ;
+                ktSum2 += pow(kt[i][num[ii]],2) ;
+                ktSum4 += pow(kt[i][num[ii]],4) ;
+                
+                
+                for (int jj = 0; jj < mockupNum; jj++)
+                {
+                    km_iSum[jj] += km_i[jj][num[ii]] ;
+                    km_iSum4[jj] += pow(km_i[jj][num[ii]],4) ;
+
+                    for (int kk = 0; kk < mockupNum; kk++)
+                    {
+                        km_iSum2[jj][kk] += km_i[jj][num[ii]]*km_i[kk][num[ii]] ;
+                    }
+                }
+
+                
                 for (int kk = 0; kk < mockupNum; kk++)
                 {
-                    kmSum2[jj][kk] += km_i[jj][num]*km_i[kk][num] ;
-                }
+                    ktkm_iSum[kk] += kt[i][num[ii]]*km_i[i][num[ii]] ;
+                    ktkm_iSum2[kk] += pow(kt[i][num[ii]]*km_i[i][num[ii]],2) ;
+                }   
                 
             }
-            
-            
 
-            for (int jj = 0; jj < targetNum; jj++)
+            double mu_m[mockupNum] ;
+            double mu_m2[mockupNum][mockupNum] ;
+
+            double var_m2[mockupNum] ;
+
+            double cov_mm[mockupNum][mockupNum] ;
+
+            for (int ii = 0; ii < mockupNum; ii++)
             {
-                for (int kk = 0; kk < mockupNum; kk++)
+                mu_m[ii] = km_iSum[ii]/sampleNum ;
+            }
+
+            for (int ii = 0; ii < mockupNum; ii++)
+            {
+                for (int jj = 0; jj < mockupNum; jj++)
                 {
-                    ktkmSum[jj][kk] += kt[jj][num]*km_i[jj][num] ;
-                    ktkmSum2[jj][kk] += pow(kt[jj][num]*km_i[jj][num],2) ;
-                }   
+                    mu_m2[ii][jj] = km_iSum2[ii][jj]/sampleNum ;
+
+                    cov_mm[ii][jj] = (mu_m2[ii][jj] - mu_m[ii]*mu_m[jj])*sampleNum/(sampleNum-1) ;
+                }
             }
-        }
-
-        double mu_m[mockupNum] ;
-        double mu_m2[mockupNum][mockupNum] ;
-
-        double var_m2[mockupNum] ;
-
-        double cov_mm[mockupNum][mockupNum] ;
-
-        for (int ii = 0; ii < mockupNum; ii++)
-        {
-            mu_m[ii] = kmSum[ii]/sampleNum ;
-
-            // ofs<<mu_m[ii]<<"\n";
-
-        }
-
-        
-        for (int ii = 0; ii < mockupNum; ii++)
-        {
-            for (int jj = 0; jj < mockupNum; jj++)
-            {
-                mu_m2[ii][jj] = kmSum2[ii][jj]/sampleNum ;
-
-                // ofs<<mu_m2[ii][jj]<<"\n" ;
-
-                cov_mm[ii][jj] = (mu_m2[ii][jj] - mu_m[ii]*mu_m[jj])*sampleNum/(sampleNum-1) ;
-            }
-        }
-
-        // for (int ii = 0; ii < mockupNum; ii++)
-        // {
-        //     for (int jj = 0; jj < mockupNum; jj++)
-        //     {
-        //         ofs<<cov_mm[ii][jj]<<"\n" ;
-        //     }
             
-        // }
-        
-
-        for (int ii = 0; ii < mockupNum; ii++)
-        {
-            var_m2[ii] = (kmSum4[ii]/sampleNum - pow(mu_m2[ii][ii],2))*sampleNum/(sampleNum-1) ;
-        }
-
-        double invM[mockupNum][mockupNum] ;
-        double buffer; //一時的なデータを蓄える
-        
-        //単位行列を作る
-        for (int ii = 0; ii < mockupNum; ii++){
-            for (int jj = 0; jj < mockupNum; jj++){
-                invM[ii][jj] = (ii == jj)?1.0:0.0;
+            for (int ii = 0; ii < mockupNum; ii++)
+            {
+                var_m2[ii] = (km_iSum4[ii]/sampleNum - pow(mu_m2[ii][ii],2))*sampleNum/(sampleNum-1) ;
             }
-        }
-        //掃き出し法
-        for (int ii = 0; ii < mockupNum; ii++){
-            buffer = 1/cov_mm[ii][ii];
-            for(int jj = 0; jj < mockupNum; jj++){
-                cov_mm[ii][jj] *= buffer;
-                invM[ii][jj] *= buffer;
+
+            double invM[mockupNum][mockupNum] ;
+            double buffer; //一時的なデータを蓄える
+            
+            //単位行列を作る
+            for (int ii = 0; ii < mockupNum; ii++)
+            {
+                for (int jj = 0; jj < mockupNum; jj++){
+                    invM[ii][jj] = (ii == jj)?1.0:0.0;
+                }
             }
-            for(int jj = 0; jj < mockupNum; jj++){
-                if(ii != jj){
-                    buffer = cov_mm[jj][ii];
-                    for(int kk = 0; kk < mockupNum; kk++){
-                    cov_mm[jj][kk] -= cov_mm[ii][kk]*buffer;
-                    invM[jj][kk] -= invM[ii][kk]*buffer ;
+            //掃き出し法
+            for (int ii = 0; ii < mockupNum; ii++)
+            {
+                buffer = 1/cov_mm[ii][ii];
+                for(int jj = 0; jj < mockupNum; jj++){
+                    cov_mm[ii][jj] *= buffer;
+                    invM[ii][jj] *= buffer;
+                }
+                for(int jj = 0; jj < mockupNum; jj++){
+                    if(ii != jj){
+                        buffer = cov_mm[jj][ii];
+                        for(int kk = 0; kk < mockupNum; kk++){
+                        cov_mm[jj][kk] -= cov_mm[ii][kk]*buffer;
+                        invM[jj][kk] -= invM[ii][kk]*buffer ;
+                        }
                     }
                 }
             }
-        }
 
-        double km[sampleNum] ;
-        
-        for (int ii = 0; ii < targetNum; ii++)
-        {
+            double km[sampleNum] ;
 
             double sum1_m = 0. ;
             double sum2_m = 0. ;
@@ -356,19 +305,19 @@ int main(){
             double sum1_tm = 0. ;
             double sum2_tm = 0. ;
 
-            double mu_t = ktSum[ii]/sampleNum ;
-            double mu_t2 = ktSum2[ii]/sampleNum ;
+            double mu_t = ktSum/sampleNum ;
+            double mu_t2 = ktSum2/sampleNum ;
 
             double var_t = (mu_t2-pow(mu_t,2))*sampleNum/(sampleNum-1) ;
 
-            double var_t2 = (ktSum4[ii]/sampleNum-pow(mu_t2,2))*sampleNum/(sampleNum-1);
+            double var_t2 = (ktSum4/sampleNum-pow(mu_t2,2))*sampleNum/(sampleNum-1);
 
             double cov_tm[mockupNum] ;
             double cov_tm2[mockupNum] ;
             for (int jj = 0; jj < mockupNum; jj++)
             {
-                cov_tm[jj] = (ktkmSum[ii][jj]/sampleNum - mu_t*mu_m[jj])*sampleNum/(sampleNum-1) ;
-                cov_tm2[jj] = (ktkmSum2[ii][jj]/sampleNum - mu_t2*mu_m2[jj][jj])*sampleNum/(sampleNum-1) ;
+                cov_tm[jj] = (ktkm_iSum[jj]/sampleNum - mu_t*mu_m[jj])*sampleNum/(sampleNum-1) ;
+                cov_tm2[jj] = (ktkm_iSum2[jj]/sampleNum - mu_t2*mu_m2[jj][jj])*sampleNum/(sampleNum-1) ;
             }
 
             double a[mockupNum] ;
@@ -392,31 +341,21 @@ int main(){
                 a[1] = 1. ;
             #endif
 
-            // for (int jj = 0; jj < mockupNum; jj++)
-            // {
-            //     ofs<<a[jj]<<"\n";
-            // }
-            
-
             for (int jj = 0; jj < sampleNum; jj++)
             {
-
-                
-                
-                
-                km[jj] = 0. ;
+                km[num[jj]] = 0. ;
 
                 for (int kk = 0; kk < mockupNum; kk++)
                 {
-                    km[jj] += a[kk]*km_i[kk][jj] ;
+                    km[jj] += a[kk]*km_i[kk][num[jj]] ;
                 }
                 
                 sum1_m += km[jj] ;
                 sum2_m += pow(km[jj],2) ;
                 sum4_m += pow(km[jj],4) ;
 
-                sum1_tm += kt[ii][jj]*km[jj] ;
-                sum2_tm += pow(kt[ii][jj]*km[jj],2) ;
+                sum1_tm += kt[i][num[jj]]*km[jj] ;
+                sum2_tm += pow(kt[i][num[jj]]*km[jj],2) ;
 
             }
             
@@ -435,15 +374,15 @@ int main(){
             double alpha = cov_tm_vi/var_m_vi; 
             double beta = cov_t2m2_vi/var_m2_vi;
 
-            // ofs<<alpha<<" "<<beta<<"\n";
-
+            // cout<<corr_tm_vi<<"\n" ;
+ 
             double sample_H[sampleNum] ;
             double sample_Hbar[sampleNum] ;
 
             for (int jj = 0; jj < sampleNum; jj++)
             {
-                sample_H[jj] = kt[ii][jj] - alpha*km[jj] ;
-                sample_Hbar[jj] = pow(kt[ii][jj],2) - beta*pow(km[jj],2) ;
+                sample_H[jj] = kt[i][num[jj]] - alpha*km[jj] ;
+                sample_Hbar[jj] = pow(kt[i][num[jj]],2) - beta*pow(km[jj],2) ;
             }
             
             double sum1_h = 0.;
@@ -463,7 +402,7 @@ int main(){
             double mu_h = sum1_h/sampleNum;
             double mu_hbar = sum1_hbar/sampleNum;
 
-            // ofs<<mu_h<<" "<<mu_hbar<<"\n" ;
+            // cout<<mu_h<<" "<<mu_hbar<<"\n" ;
 
             double mu_t_est = mu_h ;
             double mu_m2_rigorous  = a[0]*a[0]*2.244672e-04+a[1]*a[1]*7.632769e-03+2*a[0]*a[1]*9.526347e-06;
@@ -472,16 +411,15 @@ int main(){
             double var_t_est = mu_t2_est-pow(mu_t_est,2);
             if(var_t_est<0)var_t_est = 0.;
 
-            mu_t_cas[ii][i] = mu_t ;
-            mu_t_est_cas[ii][i] = mu_t_est ;
-            std_t_cas[ii][i] = sqrt(var_t) ;
-            std_t_est_cas[ii][i] = sqrt(var_t_est) ;
+            mu_t_cas[j] = mu_t ;
+            mu_t_est_cas[j] = mu_t_est ;
+            std_t_cas[j] = sqrt(var_t) ;
+            std_t_est_cas[j] = sqrt(var_t_est) ;
+            
+        
         }
-    
-    }
 
-    for (int ii = 0; ii < targetNum; ii++)
-    {
+        
         double sum1_mut = 0.;
         double sum2_mut = 0.;
         double sum1_mutest = 0.;
@@ -491,14 +429,14 @@ int main(){
         double sum1_stdtest = 0.;
         double sum2_stdtest = 0.;
         for(int j = 0; j < cal; j++){
-            sum1_mut += mu_t_cas[ii][j];
-            sum2_mut += pow(mu_t_cas[ii][j],2);
-            sum1_mutest += mu_t_est_cas[ii][j];
-            sum2_mutest += pow(mu_t_est_cas[ii][j],2);
-            sum1_stdt += std_t_cas[ii][j];
-            sum2_stdt += pow(std_t_cas[ii][j],2);
-            sum1_stdtest += std_t_est_cas[ii][j];
-            sum2_stdtest += pow(std_t_est_cas[ii][j],2);
+            sum1_mut += mu_t_cas[j];
+            sum2_mut += pow(mu_t_cas[j],2);
+            sum1_mutest += mu_t_est_cas[j];
+            sum2_mutest += pow(mu_t_est_cas[j],2);
+            sum1_stdt += std_t_cas[j];
+            sum2_stdt += pow(std_t_cas[j],2);
+            sum1_stdtest += std_t_est_cas[j];
+            sum2_stdtest += pow(std_t_est_cas[j],2);
         }
 
         sum1_mut /= cal;
@@ -516,14 +454,12 @@ int main(){
         double ur_mu = sqrt(var_mutest)/sqrt(var_mut);    
         double ur_std = sqrt(var_stdtest)/sqrt(var_stdt); 
 
-        #if mean
-        ofs<<cal_point[ii]<<" "<<sum1_mut<<"\n";
-        #endif
-
-        #if deviation
-        ofs<<cal_point[ii]<<" "<<ur_std<<"\n";
-        #endif
+        ofs<<cal_point[i]<<" "<<ur_mu<<"\n" ;
     }
+    
+        
+
+        
     
 
     return 0 ;
