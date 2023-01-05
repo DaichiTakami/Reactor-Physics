@@ -1,0 +1,26 @@
+
+ sample_* : sample data
+
+  - k-inf at 21 different burnup points.
+    (0, 0.1, 1.0, 2.5, 5.0, 7.5, 10.0, ..., 40.0, 42.5, 45.0 GWD/t)
+
+  - Number density (ND) of Pu-239 at 5 GWD/t
+
+  - Number density (ND) of Pu-242 at 40 GWD/t
+
+----------------------------------------------------------------------
+
+ Mockup data information
+
+  - Average of ND of Pu-239 at 5 GWD/t  : 4.49744899e-05
+
+  - Average of ND of Pu-242 at 40 GWD/t : 1.27414263e-05
+
+  - Relative variance of ND of Pu-239 at 5 GWD/t : 2.244672e-04
+
+  - Relative variance of ND of Pu-242 at 40 GWD/t : 7.632769e-03
+
+  - Relative covariance between two mockup : 9.526347e-06
+
+
+

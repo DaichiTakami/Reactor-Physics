@@ -17,6 +17,7 @@
       "latex-workshop.latex.autoClean.run": "onBuilt",
       "files.associations": {
         "algorithm": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "iostream": "cpp"
       } // ビルド時に一時ファイル(.auxなど)を削除
 }

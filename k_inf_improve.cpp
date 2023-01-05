@@ -12,18 +12,9 @@
 using namespace std ;
 
 int random(int fileNum){
-    return rand()%fileNum ;
-}
 
-vector<string> split(string& input, char delimiter)
-{
-    istringstream stream(input);
-    string field;
-    vector<string> result;
-    while (getline(stream, field, delimiter)) {
-        result.push_back(field);
-    }
-    return result;
+    return rand()%fileNum ;
+
 }
 
 int main(){
@@ -33,7 +24,8 @@ int main(){
     ifstream ifs ;
 
     char output[256] ;
-    cout<<"Enter a name for the output file."<<"\n" ;
+    cout<<"出力するファイルの名前を入力してください。"<<"\n" ;
+    cout<<"例:a.dat,b"<<"\n" ;
     cin>>output;
 
     const char *outputfile = output ;
@@ -41,15 +33,7 @@ int main(){
 
     int fileNum = 0 ;
 
-    int sampleNum ;
-    cout<<"Enter the number of samples."<<"\n" ;
-    cin>>sampleNum ;
-
-    int num[sampleNum] ;
-
-    int cal = 100 ;
-
-    int loopMax = 1000000000 ;
+    int cal  ;
 
     char filename[256] ;
     char buf[256] ;
@@ -57,6 +41,27 @@ int main(){
     int targetNum = 0 ;
 
     ifs.open("SAMPLE/cal_point");
+
+    if (ifs.fail())
+    {
+        cout<<"計算目標を指定するファイルが見つかりませんでした。"<<"\n";
+        cout<<"目標パラメータの数を入力してください"<<"\n" ;
+        cin>>targetNum ;
+
+        double *cal_point ;
+        cal_point = new double[targetNum] ;
+
+        cout<<"出力データのxの値として出力する値を指定してください。"<<"\n" ;
+        double cal_buf ;
+
+        for (int jj = 0; jj < targetNum; jj++)
+        {
+            cout<<jj+1<<"番目 : ";
+            cin>>cal_buf   ;
+            cal_point[jj] = cal_buf ;
+        }
+        
+    }
 
     while (ifs.getline(buf,sizeof(buf)))
     {
@@ -79,29 +84,13 @@ int main(){
 
     ifs.close() ;
 
-    ifs.open("SAMPLE/sample_ref");
+    ifs.open("SAMPLE/sample_0");
 
     int linenum = 0 ;
 
     while (ifs.getline(buf,sizeof(buf)))
     {
         linenum ++ ;
-    }
-    
-    // ofs<<"line number = "<<linenum<<"\n" ;
-
-    ifs.clear() ;
-    ifs.seekg(0, std::ios::beg) ;
-
-    double *ref ;
-    ref = new double[linenum] ;
-
-    for (int jj = 0; jj < linenum; jj++)
-    {
-        ifs.getline(buf,sizeof(buf)) ;
-        ref[jj] = atof(buf) ;
-
-        // cout<<ref[jj]<<"\n" ;
     }
 
     ifs.close() ;
@@ -122,11 +111,6 @@ int main(){
     double ktkm_iSum[mockupNum] ;
     double ktkm_iSum2[mockupNum] ;
 
-    double mu_t_cas[cal] ;
-    double mu_t_est_cas[cal] ;
-    double std_t_cas[cal] ;
-    double std_t_est_cas[cal] ;
-
     for (int ii = 0; ; ii++)
     {
         
@@ -143,10 +127,116 @@ int main(){
         fileNum ++ ;
     }
 
-    cout<<"Number of files : "<<fileNum<<"\n" ;
+    cout<<"サンプルファイルの数は"<<fileNum<<"です。"<<"\n" ;
+
+    int recNum ;
+    if (fileNum < 100)
+    {
+        recNum = 10*(fileNum/10) ;
+    }else if (fileNum < 1000)
+    {
+        recNum = 100*(fileNum/100) ; ;
+    }else{
+        recNum = 1000*(fileNum/1000) ;
+    }
+    
+
+    int sampleNum ;
+    cout<<"計算で使用するサンプル数を入力してください"<<"\n" ;
+    cout<<"推奨値は"<<recNum<<"です。"<<"\n" ;
+    cin>>sampleNum ;
+
+    int num[sampleNum] ;
+
+    cout<<"計算回数を入力してください"<<"\n" ;
+    cout<<"推奨値は100です。"<<"\n" ;
+    cin>>cal ;
+
+    int flag ;
+    cout<<"出力形式を選択してください。"<<"\n";
+    cout<<"1.UR 2.期待値と標準誤差"<<"\n" ;
+    cin>>flag ;
+
+    int outputFlag ;
+
+    if (flag == 1)
+    {
+        cout<<"出力するパラメータを選択してください。"<<"\n" ;
+        cout<<"1.平均 2.標準偏差 3.相関"<<"\n" ;
+        cin>>outputFlag ;
+        if (outputFlag != 1 && outputFlag != 2 && outputFlag != 3)
+        {
+            cout<<"無効な値が入力されました。"<<"\n" ;
+            cout<<"プログラムを終了します。"<<"\n" ;
+            return 0 ;
+        }
+        
+    }else if (flag == 2)
+    {
+        cout<<"出力するパラメータを選択してください。"<<"\n" ;
+        cout<<"1.平均 2.標準偏差"<<"\n" ;
+        cin>>outputFlag ;
+        if (outputFlag != 1 && outputFlag != 2)
+        {
+            cout<<"無効な値が入力されました。"<<"\n" ;
+            cout<<"プログラムを終了します。"<<"\n" ;
+            return 0 ;
+        }
+    } else {
+        cout<<"無効な値が入力されました。"<<"\n" ;
+        cout<<"プログラムを終了します。"<<"\n" ;
+        return 0 ;
+    }
+
+    double mu_t_cas[cal] ;
+    double mu_t_est_cas[cal] ;
+    double std_t_cas[cal] ;
+    double std_t_est_cas[cal] ;
+    double corr_tm_cas[cal] ;
 
     double kt[targetNum][fileNum] ;
     double km_i[mockupNum][fileNum] ;
+
+    double ref[linenum] ;
+    for (int ii = 0; ii < linenum; ii++)
+    {
+        ref[ii] = 0. ;
+    }
+    
+
+    for (int ii = 0; ii < fileNum; ii++)
+    {
+        
+        sprintf(filename, "SAMPLE/sample_%d", ii);
+
+        ifs.open(filename) ;
+        if (ifs.fail())
+        {
+            break ;
+        }
+
+        double *arr ;
+        arr = new double[linenum] ;
+
+        for (int jj = 0; jj < linenum; jj++)
+        {
+            ifs.getline(buf,sizeof(buf)) ;
+            arr[jj] = atof(buf) ;
+        }
+
+        ifs.close() ;
+
+        for (int jj = 0; jj < linenum; jj++)
+        {
+            ref[jj] += arr[jj] ;
+        }
+    }
+    
+    for (int ii = 0; ii < linenum; ii++)
+    {
+        ref[ii] /=fileNum ;
+    }
+    
 
     for (int ii = 0; ii < fileNum; ii++)
     {
@@ -186,9 +276,49 @@ int main(){
             km_i[jj][ii] = arr[jj+targetNum] ;
             
         }
-
-        // cout<<km_i[0][ii]<<" "<<km_i[1][ii]<<"\n" ;
     }
+
+    double cov_mm_rigorous[mockupNum][mockupNum] ;
+
+    
+    for (int jj = 0; jj < mockupNum; jj++)
+    {
+        km_iSum[jj] = 0. ;
+        km_iSum4[jj] = 0. ;
+        for (int kk = 0; kk < mockupNum; kk++)
+        {
+            km_iSum2[jj][kk] = 0. ;
+        }
+        
+    }
+    
+    for (int ii = 0; ii < fileNum; ii++)
+    {
+        for (int jj = 0; jj < mockupNum; jj++)
+        {
+            km_iSum[jj] += km_i[jj][ii] ;
+            km_iSum4[jj] += pow(km_i[jj][ii],4) ;
+            for (int kk = 0; kk < mockupNum; kk++)
+            {
+                km_iSum2[jj][kk] += km_i[jj][ii]*km_i[kk][ii] ;
+            }
+            
+        }
+        
+    }
+
+    for (int ii = 0; ii < mockupNum; ii++)
+    {
+        for (int jj = 0; jj < mockupNum; jj++)
+        {
+            cov_mm_rigorous[ii][jj] = (km_iSum2[ii][jj]/fileNum - km_iSum[ii]/fileNum * km_iSum[jj]/fileNum)*fileNum/(fileNum-1) ;
+        }
+        
+    }
+    
+    
+    
+    
     
     for (int i = 0; i < targetNum; i++)
     {
@@ -234,8 +364,8 @@ int main(){
                 
                 for (int kk = 0; kk < mockupNum; kk++)
                 {
-                    ktkm_iSum[kk] += kt[i][num[ii]]*km_i[i][num[ii]] ;
-                    ktkm_iSum2[kk] += pow(kt[i][num[ii]]*km_i[i][num[ii]],2) ;
+                    ktkm_iSum[kk] += kt[i][num[ii]]*km_i[kk][num[ii]] ;
+                    ktkm_iSum2[kk] += pow(kt[i][num[ii]]*km_i[kk][num[ii]],2) ;
                 }   
                 
             }
@@ -261,6 +391,8 @@ int main(){
                     cov_mm[ii][jj] = (mu_m2[ii][jj] - mu_m[ii]*mu_m[jj])*sampleNum/(sampleNum-1) ;
                 }
             }
+
+            // cout<<cov_mm[0][0]<<" "<<cov_mm[1][1]<<" "<<cov_mm[1][0]<<"\n" ;
             
             for (int ii = 0; ii < mockupNum; ii++)
             {
@@ -327,9 +459,11 @@ int main(){
                 for (int kk = 0; kk < mockupNum; kk++)
                 {
                     a[jj] += invM[jj][kk]*cov_tm[kk] ;
+                    
                 }
                 
             }
+            // cout<<a[0]<<" "<<a[1]<<"\n" ;
 
             #if Pu9
                 a[0] = 1. ;
@@ -343,7 +477,7 @@ int main(){
 
             for (int jj = 0; jj < sampleNum; jj++)
             {
-                km[num[jj]] = 0. ;
+                km[jj] = 0. ;
 
                 for (int kk = 0; kk < mockupNum; kk++)
                 {
@@ -374,8 +508,8 @@ int main(){
             double alpha = cov_tm_vi/var_m_vi; 
             double beta = cov_t2m2_vi/var_m2_vi;
 
-            // cout<<corr_tm_vi<<"\n" ;
- 
+            // ofs<<corr_tm_vi<<"\n" ;
+
             double sample_H[sampleNum] ;
             double sample_Hbar[sampleNum] ;
 
@@ -405,7 +539,17 @@ int main(){
             // cout<<mu_h<<" "<<mu_hbar<<"\n" ;
 
             double mu_t_est = mu_h ;
-            double mu_m2_rigorous  = a[0]*a[0]*2.244672e-04+a[1]*a[1]*7.632769e-03+2*a[0]*a[1]*9.526347e-06;
+            double mu_m2_rigorous  = 0. ;
+            for (int ii = 0; ii < mockupNum; ii++)
+            {
+                for (int jj = 0; jj < mockupNum; jj++)
+                {
+                    mu_m2_rigorous += a[ii]*a[jj]*cov_mm_rigorous[ii][jj] ;
+                }
+                
+            }
+            
+
 
             double mu_t2_est = mu_hbar+beta*mu_m2_rigorous;
             double var_t_est = mu_t2_est-pow(mu_t_est,2);
@@ -415,6 +559,7 @@ int main(){
             mu_t_est_cas[j] = mu_t_est ;
             std_t_cas[j] = sqrt(var_t) ;
             std_t_est_cas[j] = sqrt(var_t_est) ;
+            corr_tm_cas[j] = corr_tm_vi ;
             
         
         }
@@ -428,6 +573,7 @@ int main(){
         double sum2_stdt = 0.;
         double sum1_stdtest = 0.;
         double sum2_stdtest = 0.;
+        double sum_corr = 0. ;
         for(int j = 0; j < cal; j++){
             sum1_mut += mu_t_cas[j];
             sum2_mut += pow(mu_t_cas[j],2);
@@ -437,12 +583,14 @@ int main(){
             sum2_stdt += pow(std_t_cas[j],2);
             sum1_stdtest += std_t_est_cas[j];
             sum2_stdtest += pow(std_t_est_cas[j],2);
+            sum_corr += corr_tm_cas[j] ;
         }
 
         sum1_mut /= cal;
         sum1_mutest /= cal;
         sum1_stdt /= cal;
         sum1_stdtest /= cal;
+        sum_corr /= cal ;
 
         double var_mut = (sum2_mut/cal-pow(sum1_mut,2))*cal/(cal-1);
         double var_mutest = (sum2_mutest/cal-pow(sum1_mutest,2))*cal/(cal-1);
@@ -454,10 +602,53 @@ int main(){
         double ur_mu = sqrt(var_mutest)/sqrt(var_mut);    
         double ur_std = sqrt(var_stdtest)/sqrt(var_stdt); 
 
-        ofs<<cal_point[i]<<" "<<ur_mu<<"\n" ;
+        if (flag == 1)
+        {
+            if (outputFlag == 1)
+            {
+                ofs<<cal_point[i]<<" "<<ur_mu<<"\n" ;
+            }
+
+            if (outputFlag == 2)
+            {
+                ofs<<cal_point[i]<<" "<<ur_std<<"\n" ;
+            }
+            
+            if (outputFlag == 3)
+            {
+                ofs<<cal_point[i]<<" "<<sum_corr<<"\n" ;
+            }
+        }
+        
+        if (flag == 2)
+        {
+            if (outputFlag == 1)
+            {
+                ofs<<cal_point[i]<<" "<<sum1_mutest<<" "<<var_mutest<<"\n" ;
+            }
+
+            if (outputFlag == 2)
+            {
+                ofs<<cal_point[i]<<" "<<sum1_stdtest<<" "<<var_stdtest<<"\n" ;
+            }
+            
+        }
+        
+        
+        
+        
     }
     
-        
+    // for (int i = 0; i < mockupNum; i++)
+    // {
+    //     for (int j = 0; j < mockupNum; j++)
+    //     {
+    //         cout<<cov_mm_rigorous[i][j]<<" ";
+    //     }
+    //     cout<<"\n" ;
+    // }
+    
+    
 
         
     

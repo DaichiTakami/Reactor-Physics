@@ -1,9 +1,9 @@
 # Fdb version 3
-["dvipdf"] 1671770772 "test.dvi" "test.pdf" "test" 1671771644
+["dvipdf"] 1671770772 "test.dvi" "test.pdf" "test" 1672945730
   "test.dvi" 1671770772 2776 e2ff82e3917034fec2eb0f2cb46846d4 "latex"
   (generated)
   "test.pdf"
-["latex"] 1671770768 "test.tex" "test.dvi" "test" 1671771644
+["latex"] 1671770768 "test.tex" "test.dvi" "test" 1672945730
   "/Applications/TeXLive/Library/texlive/2020/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/Applications/TeXLive/Library/texlive/2020/texmf-dist/fonts/tfm/public/bxjatoucs/bxjatoucs-cid.tfm" 1571867428 92388 7031e5a1936cb30180e7c99464bb574a ""
   "/Applications/TeXLive/Library/texlive/2020/texmf-dist/fonts/tfm/public/bxjatoucs/bxjatoucs-jis.tfm" 1571867428 31380 1d09ef146eecd6f0f49e1f330de6fb2e ""
@@ -70,7 +70,7 @@
   "test.out" 1671770772 103 7af2244b7f2042162b2ab1ffa086a4b6 "latex"
   "test.tex" 1671669883 1441 5650cf3d30e29f90c795cd146dab74d2 ""
   (generated)
-  "test.dvi"
   "test.out"
-  "test.log"
   "test.aux"
+  "test.dvi"
+  "test.log"
