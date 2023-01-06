@@ -23,6 +23,12 @@ int main(){
 
     ifstream ifs ;
 
+    char openFile[256] ;
+    cout<<"サンプルのあるフォルダ名を入力してください。"<<"\n" ;
+    cin>>openFile ;
+
+    const char *openFolder = openFile ;
+
     char output[256] ;
     cout<<"出力するファイルの名前を入力してください。"<<"\n" ;
     cout<<"例:a.dat,b"<<"\n" ;
@@ -40,7 +46,9 @@ int main(){
 
     int targetNum = 0 ;
 
-    ifs.open("SAMPLE/cal_point");
+    sprintf(filename, "%s/cal_point",openFolder) ;
+
+    ifs.open(filename);
 
     if (ifs.fail())
     {
@@ -84,7 +92,9 @@ int main(){
 
     ifs.close() ;
 
-    ifs.open("SAMPLE/sample_0");
+    sprintf(filename,"%s/sample_0",openFolder) ;
+
+    ifs.open(filename);
 
     int linenum = 0 ;
 
@@ -98,6 +108,17 @@ int main(){
 
     int mockupNum = linenum - targetNum ;
 
+    int mockupfrag ;
+    cout<<"類似パラメータはサンプル中の下から"<<mockupNum<<"個です。"<<"\n" ;
+    cout<<"これらのの類似パラメータを使用しますか？"<<"\n" ;
+    cout<<"1:はい　2:いいえ"<<"\n" ;
+    cin>>mockupfrag ;
+
+    if (mockupfrag == 2)
+    {
+        cout<<"いくつ使用しますか？"<<"\n" ;
+        cin>>mockupNum ;
+    }
     
     double ktSum ;
     vector<double> km_iSum(mockupNum) ;
@@ -111,10 +132,25 @@ int main(){
     double ktkm_iSum[mockupNum] ;
     double ktkm_iSum2[mockupNum] ;
 
+    int mockupdata[mockupNum] ;
+
+    if (mockupfrag == 2)
+    {
+        cout<<"どのデータを類似パラメータとして利用しますか？"<<"\n" ;
+        cout<<"サンプルデータの上から何番目を利用するか指定してください。"<<"\n" ;
+        for (int i = 0; i < mockupNum; i++)
+        {
+            cout<<i+1<<"つ目 : " ;
+            cin>>mockupdata[i] ;
+        }
+        
+    }
+    
+
     for (int ii = 0; ; ii++)
     {
         
-        sprintf(filename, "SAMPLE/sample_%d", ii);
+        sprintf(filename, "%s/sample_%d",openFolder,ii);
 
         ifs.open(filename) ;
         if (ifs.fail())
@@ -207,7 +243,7 @@ int main(){
     for (int ii = 0; ii < fileNum; ii++)
     {
         
-        sprintf(filename, "SAMPLE/sample_%d", ii);
+        sprintf(filename, "%s/sample_%d",openFolder, ii);
 
         ifs.open(filename) ;
         if (ifs.fail())
@@ -241,7 +277,7 @@ int main(){
     for (int ii = 0; ii < fileNum; ii++)
     {
         
-        sprintf(filename, "SAMPLE/sample_%d", ii);
+        sprintf(filename, "%s/sample_%d",openFolder, ii);
 
         ifs.open(filename) ;
         if (ifs.fail())
@@ -270,12 +306,22 @@ int main(){
         {
             kt[jj][ii] = arr[jj] ;
         }
-        
-        for (int jj = 0; jj < mockupNum; jj++)
+
+        if (mockupfrag == 2)
         {
-            km_i[jj][ii] = arr[jj+targetNum] ;
+            for (int jj = 0; jj < mockupNum; jj++)
+            {
+                km_i[jj][ii] = arr[mockupdata[jj]] ;
+            }
             
+        }else{
+            for (int jj = 0; jj < mockupNum; jj++)
+            {
+                km_i[jj][ii] = arr[jj+targetNum] ;
+                
+            }
         }
+           
     }
 
     double cov_mm_rigorous[mockupNum][mockupNum] ;
