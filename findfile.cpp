@@ -1,22 +1,65 @@
+#define _USE_MATH_DEFINES
+#include<cmath>
 #include<iostream>
-#include<filesystem>
-namespace fs = std::filesystem;
+#include<vector>
+#include<stdlib.h>
+#include<stdio.h>
+#include<fstream>
+#include<math.h>
 
-int main(int argc, char** argv){
+using namespace std ;
 
-	if (argc == 1)return -1;
-	fs::path path1(argv[1]);
+int main(){
 
-	if(fs::is_directory(path1)){
-		std::cout<<"Directory:"<<fs::absolute(path1).string()<<std::endl;
-		std::cout<<"Files:"<<std::endl;
-		auto dir_it = fs::directory_iterator(path1);
-		for(auto &p : dir_it){
-			std::cout<<p.path().string()<<std::endl;
-		}
-	}
+    ifstream ifs ;
 
-	auto path2 = path1/"new_dir";
-	fs::create_directory(path2);
-	
-}
+    const char *inputfile = "a.dat" ;
+    ofstream ofs(inputfile) ;
+
+    int fileNum = 10000 ;
+
+    char filename[256] ;
+    char buf[256] ;
+
+    for (int ii = 0; ii < fileNum; ii++)
+    {
+        sprintf(filename, "/Users/takamidaichi/Documents/GitHub/Reactor-Physics/SAMPLE/sample_%d", ii);
+
+        // ofs<<filename<<"\n" ;
+
+        ifs.open(filename) ;
+        if (ifs.fail())
+        {
+            ofs<<"can not open file."<<"\n" ;
+            exit(1);
+        }
+        
+        int linenum = 0 ;
+
+        while (ifs.getline(buf,sizeof(buf)))
+        {
+            linenum ++ ;
+        }
+        
+        ofs<<"line number = "<<linenum<<"\n" ;
+
+        ifs.clear() ;
+        ifs.seekg(0, std::ios::beg) ;
+
+        double *arr ;
+        arr = new double[linenum] ;
+
+        for (int jj = 0; jj < linenum; jj++)
+        {
+            ifs.getline(buf,sizeof(buf)) ;
+            arr[jj] = atof(buf) ;
+        }
+
+        ifs.close() ;
+        
+    }
+    
+    
+
+    return 0 ;
+};

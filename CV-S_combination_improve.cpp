@@ -10,9 +10,15 @@
 #define conventional 0
 #define dimensionless 1
 #define mean 0
+<<<<<<< HEAD
 #define deviation 0
 #define test 1
 #define case 9
+=======
+#define deviation 1
+#define test 0
+#define case 7
+>>>>>>> 2b7bfc688d139f55b0773e421cf6a0444ffe9f84
 
 using namespace std ;
 
@@ -183,8 +189,6 @@ int main(){
             double target = sm1Hat_1 ;
         #endif
 
-
-
         double mean_inp_1 = 0. ;
         double mean_inp_2 = 0. ;
         double std_inp_1 = 0.01 ;
@@ -242,12 +246,9 @@ int main(){
                 double km2_i = km2_bar*(1.+sm2Hat_1*ds_s_1+sm2Hat_2*ds_s_2) ;
 
                 #if dimensionless
-                    kt_i /= kt_bar ;
-                    kt_i -= 1. ;
-                    km1_i /= km1_bar ;
-                    km1_i -= 1. ;
-                    km2_i /= km2_bar ;
-                    km2_i -= 1. ;
+                    kt_i = stHat_1*ds_s_1+stHat_2*ds_s_2+stTilde_1*ds_s_1*ds_s_1+stTilde_2*ds_s_2*ds_s_2 ;
+                    km1_i = sm1Hat_1*ds_s_1+sm1Hat_2*ds_s_2 ;
+                    km2_i = sm2Hat_1*ds_s_1+sm2Hat_2*ds_s_2 ;
                 #endif
 
                 // ofs<<km_i<<" "<<kt_i<<"\n" ;
@@ -255,16 +256,21 @@ int main(){
                 sum1_t += kt_i ;
                 sum2_t += pow(kt_i,2) ;
                 sum4_t += pow(kt_i,4) ;
+
                 sum1_m_1 += km1_i ;
                 sum2_m_1 += pow(km1_i,2);
                 sum4_m_1 += pow(km1_i,4) ;
+
                 sum1_m_2 += km2_i ;
                 sum2_m_2 += pow(km2_i,2);
                 sum4_m_2 += pow(km2_i,4) ;
+
                 sum1_tm_1 += kt_i*km1_i ;
                 sum2_tm_1 += pow(kt_i*km1_i,2) ;
+
                 sum1_tm_2 += kt_i*km2_i ;
                 sum2_tm_2 += pow(kt_i*km2_i,2) ;
+
                 sum1_mm += km1_i*km2_i ;
             }   
             
@@ -361,13 +367,8 @@ int main(){
                 double km_i = pow(km1_i,a_0)*pow(km2_i,a_1) ;
 
                 #if dimensionless
-                    kt_i /= kt_bar ;
-                    kt_i -= 1. ;
-                    km1_i /= km1_bar ;
-                    km1_i -= 1. ;
-                    km2_i /= km2_bar ;
-                    km2_i -= 1. ;
-                    km_i = pow(km1_i+1.,a_0)*pow(km2_i+1.,a_1) - 1. ;
+                    kt_i = stHat_1*ds_s_1+stHat_2*ds_s_2+stTilde_1*ds_s_1*ds_s_1+stTilde_2*ds_s_2*ds_s_2 ;
+                    km_i = (sm1Hat_1*a_0+sm1Hat_2*a_1)*ds_s_1+(sm2Hat_1*a_0+sm2Hat_2*a_1)*ds_s_2 ;
                 #endif
 
                 // ofs<<kt_i<<" "<<km_i<<"\n" ;
@@ -417,14 +418,8 @@ int main(){
                 double km_bar = pow(km1_bar,a_0)*pow(km2_bar,a_1) ;
 
                 #if dimensionless
-                    kt_i /= kt_bar ;
-                    kt_i -= 1. ;
-                    km1_i /= km1_bar ;
-                    km1_i -= 1. ;
-                    km2_i /= km2_bar ;
-                    km2_i -= 1. ;
-                    km_i /= km_bar ;
-                    km_i -= 1. ;
+                    kt_i = stHat_1*ds_s_1+stHat_2*ds_s_2+stTilde_1*ds_s_1*ds_s_1+stTilde_2*ds_s_2*ds_s_2 ;
+                    km_i = (sm1Hat_1*a_0+sm1Hat_2*a_1)*ds_s_1+(sm2Hat_1*a_0+sm2Hat_2*a_1)*ds_s_2 ;
                 #endif
 
                 sample_H[i] = kt_i-alpha*km_i;
@@ -457,8 +452,8 @@ int main(){
 
             // ofs<<mu_h<<" "<<mu_hbar<<"\n" ;
 
-            double var_m2_1_rigorous = pow(sm1Hat_1*std_inp_1,2)+pow(sm1Hat_2*std_inp_2,2) ;
-            double var_m2_2_rigorous = pow(sm2Hat_1*std_inp_1,2)+pow(sm2Hat_2*std_inp_2,2) ;
+            double var_m2_1_rigorous = pow((sm1Hat_1*a_0+sm1Hat_2*a_1)*std_inp_1,2) ;
+            double var_m2_2_rigorous = pow((sm2Hat_1*a_0+sm2Hat_2*a_1)*std_inp_2,2) ;
 
             #if conventional
                 double mu_t_est = mu_h+alpha*pow(km1_bar,a_0)*pow(km2_bar,a_1);         
@@ -469,9 +464,7 @@ int main(){
 
             #if dimensionless
                 double mu_t_est = mu_h ;         
-                double mu_m2_1_rigorous = var_m2_1_rigorous ;
-                double mu_m2_2_rigorous = var_m2_2_rigorous ;
-                double mu_m2_rigorous = pow(mu_m2_1_rigorous,a_0)*pow(mu_m2_2_rigorous,a_1) ;
+                double mu_m2_rigorous = var_m2_1_rigorous+var_m2_2_rigorous ;
             #endif     
 
             // ofs<<mu_m2_rigorous<<" "<<mu_m2_1_rigorous<<" "<<mu_m2_2_rigorous<<"\n" ;
@@ -479,6 +472,13 @@ int main(){
             double mu_t2_est = mu_hbar+beta*mu_m2_rigorous;
             double var_t_est = mu_t2_est-pow(mu_t_est,2);
             if(var_t_est<0)var_t_est = 0.;
+
+            #if dimensionless
+                mu_t = kt_bar*(1+mu_t) ;
+                mu_t_est = kt_bar*(1+mu_t_est) ;
+                var_t = kt_bar*kt_bar*(var_t) ;
+                var_t_est = kt_bar*kt_bar*(var_t_est) ;
+            #endif
 
             mu_t_cas[jj] = mu_t ;
             mu_t_est_cas[jj] = mu_t_est ;

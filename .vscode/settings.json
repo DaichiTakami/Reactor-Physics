@@ -7,12 +7,17 @@
       }],
       "latex-workshop.latex.tools": [{
         "name": "latexmk",
-        "command": "latexmk",
+        "command": "/Library/TeX/texbin/latexmk",
         "args" : [
 
         ]
       }
     ],
       "latex-workshop.view.pdf.viewer":"tab", // 「Ctrl + Alt + v」で使うPDFビューワをタブに設定
-      "latex-workshop.latex.autoClean.run": "onBuilt" // ビルド時に一時ファイル(.auxなど)を削除
+      "latex-workshop.latex.autoClean.run": "onBuilt",
+      "files.associations": {
+        "algorithm": "cpp",
+        "bitset": "cpp",
+        "iostream": "cpp"
+      } // ビルド時に一時ファイル(.auxなど)を削除
 }
