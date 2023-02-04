@@ -10,15 +10,10 @@
 #define conventional 0
 #define dimensionless 1
 #define mean 0
-<<<<<<< HEAD
-#define deviation 0
-#define test 1
-#define case 9
-=======
 #define deviation 1
 #define test 0
-#define case 7
->>>>>>> 2b7bfc688d139f55b0773e421cf6a0444ffe9f84
+#define case 8
+#define single 0
 
 using namespace std ;
 
@@ -39,12 +34,17 @@ int main(){
     
     srand(10) ;
 
+    // int sa[21] = {10,15,20,25,30,35,40,50,60,80,100,150,200,250,300,350,400,500,600,800,1000} ;
+
+
     const int sample = 100 ;
     int set = 100 ;
-    int loop = 101 ;
+    int loop = 201 ;
 
     for (int ii = 0; ii < loop; ii++)
     {
+        // int sample = sa[ii] ;
+
         #if case == 1
             // case 1
             double kt_bar = 0.01*ii ;
@@ -298,6 +298,8 @@ int main(){
             double cov_mm = (sum1_mm/sample-mu_m_1*mu_m_2)*sample/(sample-1) ;
 
             double M[2][2] ;
+            // M[0][0] = pow(sm1Hat_1*std_inp_1,2)+pow(sm1Hat_2*std_inp_2,2) ;
+            // M[1][1] = pow(sm2Hat_1*std_inp_1,2)+pow(sm2Hat_2*std_inp_2,2) ;
             M[0][0] = var_m_1 ;
             M[1][1] = var_m_2 ;
             M[0][1] = cov_mm ;
@@ -350,6 +352,16 @@ int main(){
             
             double a_0 = a[0] ;
             double a_1 = a[1] ;
+
+            #if single == 1
+                a_0 = 1 ;
+                a_1 = 0 ;
+            #endif
+
+            #if single == 2
+                a_0 = 0 ;
+                a_1 = 1 ;
+            #endif
 
             sum_a0 += a_0 ;
             sum_a1 += a_1 ;
@@ -535,8 +547,8 @@ int main(){
         ofs<<target<<" "<<sum1_mut<<" "<<sum1_mutest<<" "<<sum1_stdt<<" "<<sum1_stdtest<<"\n" ;
         #endif
 
-        // double a0_est = sum_a0/set ;
-        // double a1_est = sum_a1/set ;
+        double a0_est = sum_a0/set ;
+        double a1_est = sum_a1/set ;
 
         // ofs<<target<<" "<<a0_est<<"\n";
 

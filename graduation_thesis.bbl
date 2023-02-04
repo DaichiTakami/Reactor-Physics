@@ -1,0 +1,84 @@
+\begin{thebibliography}{10}
+
+\bibitem{cacucci1988forward}
+DG~Cacucci.
+\newblock The forward and the adjoint method of sensitivity analysis.
+\newblock {\em Uncertainty Analysis}, pp. 71--144, 1988.
+
+\bibitem{mckay1988sensitivity}
+J~McKay.
+\newblock Sensitivity and uncertainty analysis using a statistical sample of
+  input values.
+\newblock {\em Uncertainty analysis}, pp. 145--186, 1988.
+
+\bibitem{julier1997new}
+Simon~J Julier and Jeffrey~K Uhlmann.
+\newblock New extension of the kalman filter to nonlinear systems.
+\newblock In {\em Signal processing, sensor fusion, and target recognition VI},
+  Vol. 3068, pp. 182--193. Spie, 1997.
+
+\bibitem{nihira2019combination}
+Shunsuke Nihira and Go~Chiba.
+\newblock Combination of sensitivity-based and random sampling-based
+  methodologies for efficient uncertainty quantification calculations with
+  control variates method.
+\newblock {\em Journal of nuclear science and technology}, Vol.~56, No.~11, pp.
+  971--980, 2019.
+
+\bibitem{kroese2013handbook}
+Dirk~P Kroese, Thomas Taimre, and Zdravko~I Botev.
+\newblock {\em Handbook of monte carlo methods}.
+\newblock John Wiley \& Sons, 2013.
+
+\bibitem{kida2022enhancement}
+Takumi Kida and Go~Chiba.
+\newblock Enhancement of applicability of high-efficiency random sampling
+  method using control variates method and sensitivity coefficients.
+\newblock {\em Journal of nuclear science and technology}, Vol.~59, No.~7, pp.
+  866--874, 2022.
+
+\bibitem{suzuki2022}
+鈴木優.
+\newblock 「高効率サンプリング手法cv-s法の無次元化による性能向上」, 2022.
+\newblock 2021年度北海道大学卒業論文.
+
+\bibitem{kida2022aki}
+木田拓実, 千葉豪.
+\newblock 「制御変量法と感度係数を利用した高効率ランダムサンプリング 手法の改良
+  (3) 複数のパラメータを組み合わせた仮想的なcv-s法」.
+\newblock Master's thesis, 北海道大学, 2022.
+\newblock 日本原子力学会2021 年秋の大会.
+
+\bibitem{kida2022syuusi}
+木田拓実.
+\newblock 「燃料集合体体系でのcv-s法による炉物理パラメータの不確かさ評価」.
+\newblock Master's thesis, 北海道大学, 2022.
+\newblock 2021年度北海道大学修士論文.
+
+\bibitem{kugo2007theoretical}
+Teruhiko Kugo, Takamasa Mori, and Toshikazu Takeda.
+\newblock Theoretical study on new bias factor methods to effectively use
+  critical experiments for improvement of prediction accuracy of neutronic
+  characteristics.
+\newblock {\em Journal of nuclear science and technology}, Vol.~44, No.~12, pp.
+  1509--1517, 2007.
+
+\bibitem{Harada}
+Hiroki Harada and Go~Chiba.
+\newblock Similarity evaluation between neutron multiplication factors and
+  nuclide inventories during nuclear fuel burnup.
+
+\bibitem{efron1986bootstrap}
+Bradley Efron and Robert Tibshirani.
+\newblock Bootstrap methods for standard errors, confidence intervals, and
+  other measures of statistical accuracy.
+\newblock {\em Statistical science}, pp. 54--75, 1986.
+
+\bibitem{endo2015confidence}
+Tomohiro Endo, Tomoaki Watanabe, and Akio Yamamoto.
+\newblock Confidence interval estimation by bootstrap method for uncertainty
+  quantification using random sampling method.
+\newblock {\em Journal of Nuclear Science and Technology}, Vol.~52, No. 7-8,
+  pp. 993--999, 2015.
+
+\end{thebibliography}

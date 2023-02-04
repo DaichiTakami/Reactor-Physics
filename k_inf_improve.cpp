@@ -23,23 +23,25 @@ int main(){
 
     ifstream ifs ;
 
-    char openFile[256] ;
-    cout<<"サンプルのあるフォルダ名を入力してください。"<<"\n" ;
-    cin>>openFile ;
+    int sa[] = {10,15,20,25,30,35,40,50,60,80,100,150,200,250,300,350,400,500,600,800,1000,1500,2000,2500,3000,3500,4000,5000,6000,8000,10000} ;
 
-    const char *openFolder = openFile ;
+    // char openFile[256] ;
+    // cout<<"サンプルのあるフォルダ名を入力してください。"<<"\n" ;
+    // cin>>openFile ;
 
-    char output[256] ;
-    cout<<"出力するファイルの名前を入力してください。"<<"\n" ;
-    cout<<"例:a.dat,b"<<"\n" ;
-    cin>>output;
+    const char *openFolder = "SAMPLE" ;
 
-    const char *outputfile = output ;
+    // char output[256] ;
+    // cout<<"出力するファイルの名前を入力してください。"<<"\n" ;
+    // cout<<"例:a.dat,b"<<"\n" ;
+    // cin>>output;
+
+    const char *outputfile = "a" ;
     ofstream ofs(outputfile) ;
 
     int fileNum = 0 ;
 
-    int cal  ;
+    int cal = 100  ;
 
     char filename[256] ;
     char buf[256] ;
@@ -114,16 +116,17 @@ int main(){
 
     int mockupNum = linenum - targetNum ;
 
-    int mockupfrag ;
-    cout<<"類似パラメータはサンプル中の下から"<<mockupNum<<"個です。"<<"\n" ;
-    cout<<"これらのの類似パラメータを使用しますか？"<<"\n" ;
-    cout<<"1:はい　2:いいえ"<<"\n" ;
-    cin>>mockupfrag ;
+    int mockupfrag = 1 ;
+    // cout<<"類似パラメータはサンプル中の下から"<<mockupNum<<"個です。"<<"\n" ;
+    // cout<<"これらのの類似パラメータを使用しますか？"<<"\n" ;
+    // cout<<"1:はい　2:いいえ"<<"\n" ;
+    // cin>>mockupfrag ;
 
     if (mockupfrag == 2)
     {
-        cout<<"いくつ使用しますか？"<<"\n" ;
-        cin>>mockupNum ;
+        // cout<<"いくつ使用しますか？"<<"\n" ;
+        // cin>>mockupNum ;
+        mockupNum = 1 ;
     }
     
     double ktSum ;
@@ -143,12 +146,13 @@ int main(){
 
     if (mockupfrag == 2)
     {
-        cout<<"どのデータを類似パラメータとして利用しますか？"<<"\n" ;
-        cout<<"サンプルデータの上から何番目を利用するか指定してください。"<<"\n" ;
+        // cout<<"どのデータを類似パラメータとして利用しますか？"<<"\n" ;
+        // cout<<"サンプルデータの上から何番目を利用するか指定してください。"<<"\n" ;
         for (int i = 0; i < mockupNum; i++)
         {
-            cout<<i+1<<"つ目 : " ;
-            cin>>mockupbuf ;
+            // cout<<i+1<<"つ目 : " ;
+            // cin>>mockupbuf ;
+            mockupbuf = 23 ;
             mockupdata[i] = mockupbuf-1 ;
         }
         
@@ -177,7 +181,7 @@ int main(){
         fileNum ++ ;
     }
 
-    cout<<"サンプルファイルの数は"<<fileNum<<"です。"<<"\n" ;
+    // cout<<"サンプルファイルの数は"<<fileNum<<"です。"<<"\n" ;
 
     int recNum ;
     if (fileNum < 100)
@@ -190,24 +194,29 @@ int main(){
         recNum = 1000*(fileNum/1000) ;
     }
     
+    for (int aa = 0; aa < 31; aa++)
+    {
+        
+    
+    
 
-    int sampleNum ;
-    cout<<"計算で使用するサンプル数を入力してください"<<"\n" ;
-    cout<<"推奨値は"<<recNum<<"です。"<<"\n" ;
-    cin>>sampleNum ;
+    int sampleNum = sa[aa] ;
+    // cout<<"計算で使用するサンプル数を入力してください"<<"\n" ;
+    // // cout<<"推奨値は"<<recNum<<"です。"<<"\n" ;
+    // cin>>sampleNum ;
 
     int num[sampleNum] ;
 
-    cout<<"計算回数を入力してください"<<"\n" ;
-    cout<<"推奨値は100です。"<<"\n" ;
-    cin>>cal ;
+    // cout<<"計算回数を入力してください"<<"\n" ;
+    // cout<<"推奨値は100です。"<<"\n" ;
+    // cin>>cal ;
 
-    int flag ;
-    cout<<"出力形式を選択してください。"<<"\n";
-    cout<<"1.UR 2.期待値と標準誤差"<<"\n" ;
-    cin>>flag ;
+    int flag = 2 ;
+    // cout<<"出力形式を選択してください。"<<"\n";
+    // cout<<"1.UR 2.期待値と標準誤差"<<"\n" ;
+    // cin>>flag ;
 
-    int outputFlag ;
+    int outputFlag = 2 ;
 
     if (flag == 1)
     {
@@ -223,9 +232,9 @@ int main(){
         
     }else if (flag == 2)
     {
-        cout<<"出力するパラメータを選択してください。"<<"\n" ;
-        cout<<"1.平均 2.標準偏差"<<"\n" ;
-        cin>>outputFlag ;
+        // cout<<"出力するパラメータを選択してください。"<<"\n" ;
+        // cout<<"1.平均 2.標準偏差"<<"\n" ;
+        // cin>>outputFlag ;
         if (outputFlag != 1 && outputFlag != 2)
         {
             cout<<"無効な値が入力されました。"<<"\n" ;
@@ -380,8 +389,9 @@ int main(){
     
     
     
-    for (int i = 0; i < targetNum; i++)
+    for (int i = 0; i < 1; i++)
     {
+        i += 10 ;
         for (int j = 0; j < cal; j++)
         {
             ktSum = 0. ;
@@ -684,12 +694,12 @@ int main(){
         {
             if (outputFlag == 1)
             {
-                ofs<<cal_point[i]<<" "<<sum1_mutest<<" "<<var_mutest<<"\n" ;
+                ofs<<cal_point[i]<<" "<<sum1_mutest<<" "<<sqrt(var_mutest)<<"\n" ;
             }
 
             if (outputFlag == 2)
             {
-                ofs<<cal_point[i]<<" "<<sum1_stdtest<<" "<<var_stdtest<<"\n" ;
+                ofs<<sampleNum<<" "<<sum1_stdtest<<" "<<sqrt(var_stdtest)<<"\n" ;
             }
             
         }
@@ -708,7 +718,7 @@ int main(){
     //     cout<<"\n" ;
     // }
     
-    
+    }
 
         
     

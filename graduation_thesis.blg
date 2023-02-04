@@ -1,0 +1,47 @@
+This is pBibTeX, Version 0.99d-j0.33 (utf8.euc) (TeX Live 2020)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: graduation_thesis.aux
+The style file: junsrt.bst
+Database file #1: graduation.bib
+You've used 13 entries,
+            2270 wiz_defined-function locations,
+            620 strings with 6370 characters,
+and the built_in function-call counts, 4126 in all, are:
+= -- 356
+> -- 88
+< -- 17
++ -- 38
+- -- 25
+* -- 182
+:= -- 494
+add.period$ -- 41
+call.type$ -- 13
+change.case$ -- 12
+chr.to.int$ -- 0
+cite$ -- 13
+duplicate$ -- 265
+empty$ -- 403
+format.name$ -- 50
+if$ -- 1025
+int.to.chr$ -- 0
+int.to.str$ -- 13
+missing$ -- 10
+newline$ -- 69
+num.names$ -- 13
+pop$ -- 83
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 228
+stack$ -- 0
+substring$ -- 251
+swap$ -- 91
+text.length$ -- 17
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 37
+width$ -- 15
+write$ -- 145
+is.kanji.str$ -- 131
