@@ -17,43 +17,51 @@ int main(){
     ifstream ifs ;
 
     char buf[256] ;
-
-    ifs.open("a.csv") ;
-    if (ifs.fail())
-    {
-        cout<<"Cannot open a.csv"<<"\n" ;
-    }
-    
-    ifs.getline(buf,sizeof(buf)) ;
-    double a = atof(buf) ;
-    ifs.close() ;
-
-    ifs.open("D.csv") ;
-    ifs.getline(buf,sizeof(buf)) ;
-    double D = atof(buf) ;
-    ifs.close() ;
-
-    ifs.open("sigma_a.csv") ;
-    ifs.getline(buf,sizeof(buf)) ;
-    double sigma_a = atof(buf) ;
-    ifs.close() ;
     
     ifs.open("meshNum.csv") ;
     ifs.getline(buf,sizeof(buf)) ;
     int meshNum = atoi(buf) ;
     ifs.close() ;
 
-    double d_x = a/(double)meshNum ;
+    // double d_x = a/(double)meshNum ;
+    vector<double> D(meshNum);
+    vector<double> sigma_a(meshNum) ;
     vector<double> S(meshNum) ;
 
-    ifs.open("ex_source3-7.csv") ;
+    ifs.open("a.csv") ;
+    if (ifs.fail())
+    {
+        cout<<"Cannot open a.csv"<<"\n" ;
+    }
+    ifs.getline(buf,sizeof(buf)) ;
+    double a = atof(buf) ;
+    ifs.close() ;
+
+    double d_x = a/(double)meshNum ;
+
+    ifs.open("D.csv") ;
+    for (int jj = 0; jj < meshNum; jj++)
+    {
+        ifs.getline(buf,sizeof(buf)) ;
+        D[jj] = atof(buf) ;
+    }
+    ifs.close() ;
+
+    ifs.open("sigma_a.csv") ;
+    for (int jj = 0; jj < meshNum; jj++)
+    {
+        ifs.getline(buf,sizeof(buf)) ;
+        sigma_a[jj] = atof(buf) ;
+    }
+    ifs.close() ;
+
+    ifs.open("ex_source4-1.csv") ;
     for (int jj = 0; jj < meshNum; jj++)
     {
         ifs.getline(buf,sizeof(buf)) ;
         S[jj] = atof(buf) ;
     }
     ifs.close() ;
-    
 
     vector<double> phi_1(meshNum) ;
     for (int ii = 0; ii < meshNum; ii++)
@@ -76,11 +84,13 @@ int main(){
         {
             if (jj == 0)
             {
-                temp = (S[jj]*d_x+D*phi_1[jj+1]/d_x)/(3*D/d_x+sigma_a*d_x) ;
+                temp = (S[jj]*d_x+D[jj]*phi_1[jj+1]/d_x)/(3*D[jj]/d_x+sigma_a[jj]*d_x) ;
             }else if(jj == meshNum-1){
-                temp = (S[jj]*d_x+D*phi_1[jj-1]/d_x)/(3*D/d_x+sigma_a*d_x) ;
+                temp = (S[jj]*d_x+D[jj]*phi_1[jj-1]/d_x)/(3*D[jj]/d_x+sigma_a[jj]*d_x) ;
             }else{
-                temp = (S[jj]*d_x+D*phi_1[jj+1]/d_x+D*phi_1[jj-1]/d_x)/(2*D/d_x+sigma_a*d_x) ;
+                double cn_1 = (2*D[jj]*D[jj+1])/(d_x*D[jj+1]+d_x*D[jj]) ;
+                double cn_2 = (2*D[jj]*D[jj-1])/(d_x*D[jj-1]+d_x*D[jj]) ;
+                temp = (cn_1*phi_1[jj+1]+cn_2*phi_1[jj-1]+S[jj]*d_x)/(cn_1+cn_2+sigma_a[jj]*d_x) ;
             }
 
             if (ii!=0)
@@ -91,8 +101,6 @@ int main(){
                     eps_max = eps ;
                 }
             }
-            
-            // cout<<eps_max<<"\n" ;
             
             phi_1[jj] = temp ;
         }
