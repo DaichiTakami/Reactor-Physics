@@ -20,6 +20,11 @@ int main(){
     char buf[256] ;
 
     ifs.open("a.csv") ;
+    if (ifs.fail())
+    {
+        cout<<"Cannot open a.csv"<<"\n" ;
+    }
+    
     ifs.getline(buf,sizeof(buf)) ;
     double a = atof(buf) ;
     ifs.close() ;
