@@ -39,7 +39,7 @@ int main(){
 
     double d_x = a/(double)meshNum ;
 
-    ifs.open("D4-3.csv") ;
+    ifs.open("D4-2.csv") ;
     for (int jj = 0; jj < meshNum; jj++)
     {
         ifs.getline(buf,sizeof(buf)) ;
@@ -47,7 +47,7 @@ int main(){
     }
     ifs.close() ;
 
-    ifs.open("sigma_a4-3.csv") ;
+    ifs.open("sigma_a4-2.csv") ;
     for (int jj = 0; jj < meshNum; jj++)
     {
         ifs.getline(buf,sizeof(buf)) ;
@@ -55,7 +55,7 @@ int main(){
     }
     ifs.close() ;
 
-    ifs.open("ex_source4-3.csv") ;
+    ifs.open("ex_source4-2.csv") ;
     for (int jj = 0; jj < meshNum; jj++)
     {
         ifs.getline(buf,sizeof(buf)) ;
